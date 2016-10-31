@@ -1,41 +1,34 @@
-import scraping
-import settings
+import scraping_settings
 import tkinter
+import Scraper
+import Analyzer
+import Trader
+import Manager
+import General_Math
+import matplotlib.pyplot as plt
 
-STOCK_NAME = []
-TIME_RANGE = '1d'
-TIME_INTERVAL = '1m'
 
+ticker_list = ['AAPL', 'TWTR']
 
-# def get_data():
-#     data = scraping.get_all_data('AAPL', TIME_RANGE, TIME_INTERVAL)
-#     for index in range(scraping.get_timestamp_length(data)):
-#         listbox1.insert(tkinter.END, 'Index: ' + str(index) + ', Price: ' + str(scraping.get_high_price(data, index)) + ', Time: ' + str(scraping.get_timestamp(data, index)))
-#         # print('Index: ' + str(index) + ', Price: ' + str(scraping.get_high_price(data, index)) + ', Time: ' + str(scraping.get_timestamp(data, index)))
-#
-#
-#
-# root = tkinter.Tk()
-#
-# listbox1 = tkinter.Listbox(root, bg='white', fg='black', height='20', width='80')
-# listbox1.grid(row='1')
-#
-# button1 = tkinter.Button(root, command=get_data, text='BIG BUTTON')
-# button1.grid(row='0')
-#
-#
-# tkinter.mainloop()
+manager_accounts = {}
+ticker_services = {}
 
-data = scraping.get_all_data('TWTR', TIME_RANGE, TIME_INTERVAL)
-f = open('test.csv' 'w')
-for index in range(scraping.get_timestamp_length(data)):
-    f.write(str(scraping.get_timestamp(data, index)) + ',' + str(scraping.get_high_price(data, index)))
-    # print('Index: '+ str(index) + ', Price: ' + str(scraping.get_high_price(data, index)) + ', Time: ' + str(scraping.get_timestamp(data, index)))
+for ticker in ticker_list:
+    ticker_services[ticker] = {'Scraper': Scraper.Ticker_Scraper(ticker), 'Analyzer': Analyzer.Ticker_Analzyer(ticker), 'Trader': Trader.Ticker_Trader(ticker)}
+
+# for item in scraping_settings.NAME_LIST:
+#     manager_accounts[item[0]] = {'Manager': Manager.Account_Manager(item[0], item[1])}
 #
-# for item in settings.TICKER_LIST:
-#     data = scraping.get_all_data(item, TIME_RANGE, TIME_INTERVAL)
-#     print(item)
-#     print(str(scraping.get_regular_open_trading_time(data)))
-#     print(str(scraping.get_regular_closing_trading_time(data)))
-#     print(str(scraping.get_high_price(data, scraping.get_high_price_length(data))))
-#     print('\n')
+# for manager in manager_accounts:
+#     cur_manager = manager_accounts[manager]['Manager']
+#     cur_manager.write_to_file(cur_manager.Account_Name + ', ' + cur_manager.Account_Money)
+# #
+for ticker in ticker_services:
+    cur_scraper = ticker_services[ticker]['Scraper']
+    cur_trader = ticker_services[ticker]['Trader']
+    cur_analyzer = ticker_services[ticker]['Analyzer']
+    data_list = []
+    for item in range(cur_scraper.get_closing_price_length()):
+        data_list.append(cur_scraper.get_closing_price(item))
+    print('The moving average of ' + cur_scraper.Ticker_Name + ' is: ' + str(cur_analyzer.get_moving_average(data_list, 5)))
+
