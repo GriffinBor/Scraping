@@ -1,3 +1,4 @@
+import os
 TICKER_FILE_NAME = 'Ticker_List.txt'
 TICKER_FILE_PATH = ''
 TICKER_LIST = []
@@ -8,6 +9,15 @@ NAME_LIST = []
 
 
 JSON_FILE_OUTPUT_PATH = 'Stock JSON/'
+
+if not os.path.isfile(TICKER_FILE_NAME):
+    open(TICKER_FILE_PATH + TICKER_FILE_NAME, 'w').close()
+
+if not os.path.isfile(NAME_FILE_PATH):
+    open(NAME_FILE_PATH + NAME_FILE_NAME, 'w').close()
+
+if not os.path.isfile(JSON_FILE_OUTPUT_PATH):
+    os.mkdir(JSON_FILE_OUTPUT_PATH)
 
 f = open(TICKER_FILE_PATH + TICKER_FILE_NAME, 'r')
 for line in f:
