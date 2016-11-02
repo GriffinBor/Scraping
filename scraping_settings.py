@@ -16,7 +16,7 @@ if not os.path.isfile(TICKER_FILE_NAME):
 if not os.path.isfile(NAME_FILE_PATH):
     open(NAME_FILE_PATH + NAME_FILE_NAME, 'w').close()
 
-if not os.path.isfile(JSON_FILE_OUTPUT_PATH):
+if not os.path.exists(JSON_FILE_OUTPUT_PATH):
     os.mkdir(JSON_FILE_OUTPUT_PATH)
 
 f = open(TICKER_FILE_PATH + TICKER_FILE_NAME, 'r')

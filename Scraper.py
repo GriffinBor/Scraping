@@ -268,3 +268,56 @@ class Ticker_Scraper:
     '''
     End of get data
     '''
+
+    '''
+    Compund Functions
+    '''
+
+    def get_timestamp_list(self, convert_to_date=True):
+        try:
+            temp_list = []
+            for item in range(self.get_timestamp_length()):
+                temp_list.append(self.get_timestamp(item, convert_to_date))
+            return temp_list
+        except:
+            self.output_scraper_response('Failed to get list of timestamps')
+
+    def get_low_price_list(self):
+        try:
+            temp_list = []
+            for item in range(self.get_low_price_length()):
+                temp_list.append(self.get_low_price(item))
+            return temp_list
+        except:
+            self.output_scraper_response('Failed to get list of low prices')
+
+    def get_high_price_list(self):
+        try:
+            temp_list = []
+            for item in range(self.get_high_price_length()):
+                temp_list.append(self.get_high_price(item))
+            return temp_list
+        except:
+            self.output_scraper_response('Failed to get list of high prices')
+
+    def get_open_price_list(self):
+        try:
+            temp_list = []
+            for item in range(self.get_open_price_length()):
+                temp_list.append(self.get_open_price(item))
+            return temp_list
+        except:
+            self.output_scraper_response('Failed to get list of open prices')
+
+    def get_closing_price_list(self):
+        try:
+            temp_list = []
+            for item in range(self.get_closing_price_length()):
+                temp_list.append(self.get_closing_price(item))
+            return temp_list
+        except:
+            self.output_scraper_response('Failed to get list of closing prices')
+
+    '''
+    End of Compound Functions
+    '''
