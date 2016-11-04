@@ -1,4 +1,4 @@
-import scraping_settings
+import settings
 import tkinter
 import Scraper
 import Analyzer
@@ -13,7 +13,7 @@ ticker_list = ['AAPL', 'TWTR']
 manager_accounts = {}
 ticker_services = {}
 
-for ticker in scraping_settings.TICKER_LIST:
+for ticker in settings.TICKER_LIST:
     ticker_services[ticker] = {'Scraper': Scraper.Ticker_Scraper(ticker), 'Analyzer': Analyzer.Ticker_Analzyer(ticker),
                                'Trader': Trader.Ticker_Trader(ticker)}
 
