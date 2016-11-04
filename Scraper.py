@@ -192,6 +192,141 @@ class Ticker_Scraper:
             Can convert to normal date format (True by default)
     '''
 
+    def get_revenue_per_share(self):
+        try:
+            return self.Financial_Data['quoteSummary']['result'][0]['financialData']['revenuePerShare']['raw']
+        except:
+            self.output_scraper_response('Failed to get revenue per share')
+
+    def get_revenue_growth(self):
+        try:
+            return self.Financial_Data['quoteSummary']['result'][0]['financialData']['revenueGrowth']['raw']
+        except:
+            self.output_scraper_response('Failed to get revenue growth')
+
+    def get_return_on_equity(self):
+        try:
+            return self.Financial_Data['quoteSummary']['result'][0]['financialData']['returnOnEquity']['raw']
+        except:
+            self.output_scraper_response('Failed to get return on equity')
+
+    def get_return_on_assets(self):
+        try:
+            return self.Financial_Data['quoteSummary']['result'][0]['financialData']['returnOnAssets']['raw']
+        except:
+            self.output_scraper_response('Failed to get return on assests')
+
+    def get_buying_recommendation(self):
+        try:
+            return self.Financial_Data['quoteSummary']['result'][0]['financialData']['recommendationKey']
+        except:
+            self.output_scraper_response('Failed to get recommendation')
+
+    def get_profit_margins(self):
+        try:
+            return self.Financial_Data['quoteSummary']['result'][0]['financialData']['profitMargins']['raw']
+        except:
+            self.output_scraper_response('Failed to get profit margins')
+
+    def get_earnings_growth(self):
+        try:
+            return self.Financial_Data['quoteSummary']['result'][0]['financialData']['earningsGrowth']['raw']
+        except:
+            self.output_scraper_response('Failed to get earnings growth')
+
+    def get_debt_to_equity(self):
+        try:
+            return self.Financial_Data['quoteSummary']['result'][0]['financialData']['debtToEquity']['raw']
+        except:
+            self.output_scraper_response('Failed to get debt to equity')
+
+    def get_trailing_eps(self):
+        try:
+            return self.Financial_Data['quoteSummary']['result'][0]['defaultKeyStatistics']['trailingEps']['raw']
+        except:
+            self.output_scraper_response('Failed to get trailing eps')
+
+    def get_profit_margins(self):
+        try:
+            return self.Financial_Data['quoteSummary']['result'][0]['defaultKeyStatistics']['profitMargins']['raw']
+        except:
+            self.output_scraper_response('Failed to get profit margins')
+
+    def get_price_to_book(self):
+        try:
+            return self.Financial_Data['quoteSummary']['result'][0]['defaultKeyStatistics']['priceToBook']['raw']
+        except:
+            self.output_scraper_response('Failed to get price to book')
+
+    def get_quarterly_earnings_growth(self):
+        try:
+            return self.Financial_Data['quoteSummary']['result'][0]['defaultKeyStatistics']['earningsQuarterlyGrowth'][
+                'raw']
+        except:
+            self.output_scraper_response('Failed to get quarterly earnings growth')
+
+    def get_book_value(self):
+        try:
+            return self.Financial_Data['quoteSummary']['result'][0]['defaultKeyStatistics']['bookValue']['raw']
+        except:
+            self.output_scraper_response('Failed to get book value')
+
+    def get_beta_number(self):
+        try:
+            return self.Financial_Data['quoteSummary']['result'][0]['defaultKeyStatistics']['beta']['raw']
+        except:
+            self.output_scraper_response('Failed to get beta number')
+
+    def get_52week_change(self):
+        try:
+            return self.Financial_Data['quoteSummary']['result'][0]['defaultKeyStatistics']['52WeekChange']['raw']
+        except:
+            self.output_scraper_response('Failed to get 52 week change')
+
+    def get_sp_52week_change(self):
+        try:
+            return self.Financial_Data['quoteSummary']['result'][0]['defaultKeyStatistics']['SandP52WeekChange']['raw']
+        except:
+            self.output_scraper_response('Failed to get S and P 52 week change')
+
+    def get_earnings_high(self):
+        try:
+            return self.Financial_Data['quoteSummary']['result'][0]['calendarEvents']['earnings']['earningsHigh']['raw']
+        except:
+            self.output_scraper_response('Failed to get earnings high')
+
+    def get_earnings_low(self):
+        try:
+            return self.Financial_Data['quoteSummary']['result'][0]['calendarEvents']['earnings']['earningsLow']['raw']
+        except:
+            self.output_scraper_response('Failed to get earnings low')
+
+    def get_earnings_average(self):
+        try:
+            return self.Financial_Data['quoteSummary']['result'][0]['calendarEvents']['earnings']['earningsAverage'][
+                'raw']
+        except:
+            self.output_scraper_response('Failed to get earnings average')
+
+    def get_revenue_high(self):
+        try:
+            return self.Financial_Data['quoteSummary']['result'][0]['calendarEvents']['earnings']['revenueHigh']['raw']
+        except:
+            self.output_scraper_response('Failed to get revenue high')
+
+    def get_revenue_low(self):
+        try:
+            return self.Financial_Data['quoteSummary']['result'][0]['calendarEvents']['earnings']['revenueLow']['raw']
+        except:
+            self.output_scraper_response('Failed to get revenue low')
+
+    def get_revenue_average(self):
+        try:
+            return self.Financial_Data['quoteSummary']['result'][0]['calendarEvents']['earnings']['revenueAverage'][
+                'raw']
+        except:
+            self.output_scraper_response('Failed to get revenue average')
+
     def get_closing_price(self, index):
         try:
             return self.Ticker_Data['chart']['result'][0]['indicators']['quote'][0]['close'][index]
@@ -240,6 +375,12 @@ class Ticker_Scraper:
             data = requests.get(
                 "https://query1.finance.yahoo.com/v7/finance/chart/" + self.Ticker_Name + "?range=" + self.Time_Range + "&interval=" + self.Time_Interval + "&indicators=quote&includeTimestamps=true&includePrePost=false&corsDomain=finance.yahoo.com")
             self.Ticker_Data = data.json()
+
+            data2 = requests.get(
+                "https://query1.finance.yahoo.com/v10/finance/quoteSummary/" + self.Ticker_Name + "?formatted=true&crumb=RnfZVQrjb%2FI&lang=en-US&region=US&modules=summaryProfile%2CfinancialData%2CrecommendationTrend%2CupgradeDowngradeHistory%2Cearnings%2CdefaultKeyStatistics%2CcalendarEvents&corsDomain=finance.yahoo.com")
+
+            self.Financial_Data = data2.json()
+
             self.output_scraper_response('Fetched data')
         except:
             self.output_scraper_response('Failed to fetch data')
