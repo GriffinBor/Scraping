@@ -12,7 +12,7 @@ JSON_FILE_OUTPUT_PATH = 'Stock JSON/'
 
 #Ranges = ["1d","5d","1mo","3mo","6mo","1y","2y","5y","10y","ytd","max"]
 #Intervals = ["1m", "5m", "10m"] could be more
-LONG_DATA_INTERVAL = '1s'
+LONG_DATA_INTERVAL = '1m'
 LONG_DATA_RANGE = '1d'
 
 BASE_DATA_INTERVAL = '1m'
