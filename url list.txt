@@ -1,8 +1,43 @@
+https://query1.finance.yahoo.com/v10/finance/quoteSummary/AAPL?formatted=true
+&crumb=RnfZVQrjb
+%2FI
+&lang=en-US
+&region=US
+&modules=incomeStatementHistory
+%2CcashflowStatementHistory
+%2CbalanceSheetHistory
+%2CincomeStatementHistoryQuarterly
+%2CcashflowStatementHistoryQuarterly
+%2CbalanceSheetHistoryQuarterly
+&corsDomain=finance.yahoo.com
+
+https://query2.finance.yahoo.com/v8/finance/chart/AAPL?formatted=true
+&crumb=RnfZVQrjb
+%2FI
+&lang=en-US
+&region=US
+&interval=1m
+&events=div
+%7Csplit&range=1d
+&corsDomain=finance.yahoo.com
+
+https://query2.finance.yahoo.com/v10/finance/quoteSummary/AAPL?formatted=true
+&crumb=RnfZVQrjb
+%2FI
+&lang=en-US
+&region=US
+&modules=earningsHistory
+%2CearningsTrend
+%2CindustryTrend
+&corsDomain=finance.yahoo.com
+
+
 
 ----financial data
 https://query1.finance.yahoo.com/v10/finance/quoteSummary/AAPL?formatted=true
 &crumb=RnfZVQrjb
-%2FI&lang=en-US
+%2FI
+&lang=en-US
 &region=US
 &modules=summaryProfile
 %2CfinancialData
@@ -21,7 +56,8 @@ https://query2.finance.yahoo.com/v7/finance/quote?formatted=true
 &region=US
 &symbols=AAPL
 %2CYHOO
-%2CAPI&fields=messageBoardId
+%2CAPI
+&fields=messageBoardId
 %2ClongName
 %2CshortName
 %2CunderlyingSymbol
@@ -48,11 +84,13 @@ https://query2.finance.yahoo.com/v10/finance/quoteSummary/AAPL?formatted=true
 
 https://query2.finance.yahoo.com/v8/finance/chart/AAPL?formatted=true
 -----Historical data
-&crumb=RnfZVQrjb%2FI
+&crumb=RnfZVQrjb
+%2FI
 &lang=en-US
 &region=US
 &interval=1d
-&events=div%7Csplit
+&events=div
+%7Csplit
 &range=1y
 &corsDomain=finance.yahoo.com
 
@@ -71,7 +109,8 @@ http://chart.finance.yahoo.com/table.csv?s=AAPL
 
 https://query2.finance.yahoo.com/v10/finance/quoteSummary/AAPL?formatted=true
 -----Data summary
-&crumb=RnfZVQrjb%2FI
+&crumb=RnfZVQrjb
+%2FI
 &lang=en-US
 &region=US
 &modules=defaultKeyStatistics
@@ -80,7 +119,8 @@ https://query2.finance.yahoo.com/v10/finance/quoteSummary/AAPL?formatted=true
 
 
 
-http://finance.yahoo.com/d/quotes.csv?s=AAPL+FB&f=nab
+http://finance.yahoo.com/d/quotes.csv?s=AAPL+FB
+&f=nab
 -----Gets csv file for listed items
 
 Pricing

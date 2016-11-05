@@ -1,17 +1,18 @@
 import time
 import json
 import requests
+import settings
 
 
 class Ticker_Scraper:
-    Time_Range = '1d'
-    Time_Interval = '1m'
-
-    def __init__(self, Ticker):
+    def __init__(self, Ticker,  get_base_data=True, get_financial_data=False, get_long_data=False):
         try:
             self.Ticker_Name = Ticker
             self.Ticker_Scraper_Output = True
             self.output_scraper_response('Created Ticker_Scraper for ticker: ' + Ticker)
+            self.get_base_data = get_base_data
+            self.get_financial_data = get_financial_data
+            self.get_long_data = get_long_data
             self.get_all_data()
         except:
             self.output_scraper_response('Failed to create Ticker_Scraper')
@@ -77,17 +78,17 @@ class Ticker_Scraper:
         except:
             self.output_scraper_response('Failed to write data to csv file')
 
-    def write_json_to_file(self, path, name):
+    def write_json_to_file(self, path, name, data):
         try:
             f = open(path + name, 'w')
-            f.write(json.dumps(self.Ticker_Data, sort_keys=True, indent=4, separators=(',', ':')))
+            f.write(json.dumps(data, sort_keys=True, indent=4, separators=(',', ':')))
         except:
             self.output_scraper_response('Failed to write data to csv file')
 
-    def append_json_to_file(self, path, name):
+    def append_json_to_file(self, path, name, data):
         try:
             f = open(path + name, 'a')
-            f.write(json.dumps(self.Ticker_Data, sort_keys=True, indent=4, separators=(',', ':')))
+            f.write(json.dumps(data, sort_keys=True, indent=4, separators=(',', ':')))
         except:
             self.output_scraper_response('Failed to write data to csv file')
 
@@ -115,6 +116,46 @@ class Ticker_Scraper:
         get_volume_price_length
             Returns length of the list of volume prices
     '''
+
+    def get_long_timestamp_length(self):
+        try:
+            return len(self.Long_Data['chart']['result'][0]['timestamp'])
+        except:
+            self.output_scraper_response('Failed to get long timestamp')
+
+
+    def get_long_closing_price_length(self):
+        try:
+            return len(self.Long_Data['chart']['result'][0]['indicators']['quote'][0]['close'])
+        except:
+            self.output_scraper_response('Failed to get long close price')
+
+    def get_long_high_price_length(self):
+        try:
+            return len(self.Long_Data['chart']['result'][0]['indicators']['quote'][0]['high'])
+        except:
+            self.output_scraper_response('Failed to get long high price')
+
+    def get_long_low_price_length(self):
+        try:
+            return len(self.Long_Data['chart']['result'][0]['indicators']['quote'][0]['low'])
+        except:
+            self.output_scraper_response('Failed to get long low price')
+
+    def get_long_open_price_length(self):
+        try:
+            return len(self.Long_Data['chart']['result'][0]['indicators']['quote'][0]['open'])
+        except:
+            self.output_scraper_response('Failed to get long open price')
+
+    def get_long_volume_price_length(self):
+        try:
+            return len(self.Long_Data['chart']['result'][0]['indicators']['quote'][0]['volume'])
+        except:
+            self.output_scraper_response('Failed to get long volume')
+
+
+
 
     def get_timestamp_length(self):
         try:
@@ -221,12 +262,6 @@ class Ticker_Scraper:
             return self.Financial_Data['quoteSummary']['result'][0]['financialData']['recommendationKey']
         except:
             self.output_scraper_response('Failed to get recommendation')
-
-    def get_profit_margins(self):
-        try:
-            return self.Financial_Data['quoteSummary']['result'][0]['financialData']['profitMargins']['raw']
-        except:
-            self.output_scraper_response('Failed to get profit margins')
 
     def get_earnings_growth(self):
         try:
@@ -358,6 +393,64 @@ class Ticker_Scraper:
         except:
             self.output_scraper_response('Failed to get volume price')
 
+    def get_long_closing_price(self, index):
+        try:
+            return self.Long_Data['chart']['result'][0]['indicators']['quote'][0]['close'][index]
+        except:
+            self.output_scraper_response('Failed to get long closing price')
+
+    def get_long_high_price(self, index):
+
+        try:
+            return self.Long_Data['chart']['result'][0]['indicators']['quote'][0]['high'][index]
+        except:
+            self.output_scraper_response('Failed to get long high price')
+
+    def get_long_low_price(self, index):
+        try:
+            return self.Long_Data['chart']['result'][0]['indicators']['quote'][0]['low'][index]
+        except:
+            self.output_scraper_response('Failed to get long low price')
+
+    def get_long_open_price(self, index):
+        try:
+            return self.Long_Data['chart']['result'][0]['indicators']['quote'][0]['open'][index]
+        except:
+            self.output_scraper_response('Failed to get long open price')
+
+    def get_long_volume_price(self, index):
+        try:
+            return self.Long_Data['chart']['result'][0]['indicators']['quote'][0]['volume'][index]
+        except:
+            self.output_scraper_response('Failed to get long volume price')
+
+    def get_long_time_zone(self):
+        try:
+            return self.Long_Data['chart']['result'][0]['meta']['tradingPeriods'][0][0]['gmtoffset']
+        except:
+            self.output_scraper_response('Failed to get long timezone offset')
+
+    def get_long_timestamp(self, index, convert_to_datetime=True):
+        try:
+            if convert_to_datetime:
+                return time.strftime("%m-%d-%Y %I:%M:%S %p",
+                                     time.gmtime(self.Long_Data['chart']['result'][0]['timestamp'][index]))
+            elif not convert_to_datetime:
+                return self.Long_Data['chart']['result'][0]['timestamp'][0]
+        except:
+            self.output_scraper_response('Failed to get long timestamp')
+
+    def get_long_timestamp_with_offset(self, index, convert_to_datetime=True):
+        try:
+            offset = self.Long_Data['chart']['result'][0]['meta']['tradingPeriods'][0][0]['gmtoffset']
+            current = self.Long_Data['chart']['result'][0]['timestamp'][index]
+            if convert_to_datetime:
+                return time.strftime("%m-%d-%Y %I:%M:%S %p", time.gmtime(current + offset))
+            elif not convert_to_datetime:
+                return current + offset
+        except:
+            self.output_scraper_response('Failed to get long timestamp with offset')
+
     def get_time_zone(self):
         try:
             return self.Ticker_Data['chart']['result'][0]['meta']['tradingPeriods'][0][0]['gmtoffset']
@@ -372,14 +465,20 @@ class Ticker_Scraper:
 
     def get_all_data(self):
         try:
-            data = requests.get(
-                "https://query1.finance.yahoo.com/v7/finance/chart/" + self.Ticker_Name + "?range=" + self.Time_Range + "&interval=" + self.Time_Interval + "&indicators=quote&includeTimestamps=true&includePrePost=false&corsDomain=finance.yahoo.com")
-            self.Ticker_Data = data.json()
+            if self.get_base_data:
+                data = requests.get(
+                    "https://query1.finance.yahoo.com/v7/finance/chart/" + self.Ticker_Name + "?range=" + settings.BASE_DATA_RANGE + "&interval=" + settings.BASE_DATA_INTERVAL + "&indicators=quote&includeTimestamps=true&includePrePost=false&corsDomain=finance.yahoo.com")
+                self.Ticker_Data = data.json()
 
-            data2 = requests.get(
-                "https://query1.finance.yahoo.com/v10/finance/quoteSummary/" + self.Ticker_Name + "?formatted=true&crumb=RnfZVQrjb%2FI&lang=en-US&region=US&modules=summaryProfile%2CfinancialData%2CrecommendationTrend%2CupgradeDowngradeHistory%2Cearnings%2CdefaultKeyStatistics%2CcalendarEvents&corsDomain=finance.yahoo.com")
+            if self.get_financial_data:
+                data2 = requests.get(
+                    "https://query1.finance.yahoo.com/v10/finance/quoteSummary/" + self.Ticker_Name + "?formatted=true&crumb=RnfZVQrjb%2FI&lang=en-US&region=US&modules=summaryProfile%2CfinancialData%2CrecommendationTrend%2CupgradeDowngradeHistory%2Cearnings%2CdefaultKeyStatistics%2CcalendarEvents&corsDomain=finance.yahoo.com")
+                self.Financial_Data = data2.json()
 
-            self.Financial_Data = data2.json()
+            if self.get_long_data:
+                data3 = requests.get(
+                    "https://query2.finance.yahoo.com/v8/finance/chart/" + self.Ticker_Name + "?formatted=true&crumb=RnfZVQrjb%2FI&lang=en-US&region=US&interval=" + settings.LONG_DATA_INTERVAL + "events=div%7Csplit&range=" + settings.LONG_DATA_RANGE + "&corsDomain=finance.yahoo.com")
+                self.Long_Data = data3.json()
 
             self.output_scraper_response('Fetched data')
         except:
@@ -458,6 +557,42 @@ class Ticker_Scraper:
             return temp_list
         except:
             self.output_scraper_response('Failed to get list of closing prices')
+
+    def get_long_low_price_list(self):
+        try:
+            temp_list = []
+            for item in range(self.get_long_low_price_length()):
+                temp_list.append(self.get_long_low_price(item))
+            return temp_list
+        except:
+            self.output_scraper_response('Failed to get list of long low prices')
+
+    def get_long_high_price_list(self):
+        try:
+            temp_list = []
+            for item in range(self.get_long_high_price_length()):
+                temp_list.append(self.get_long_high_price(item))
+            return temp_list
+        except:
+            self.output_scraper_response('Failed to get list of long high prices')
+
+    def get_long_open_price_list(self):
+        try:
+            temp_list = []
+            for item in range(self.get_long_open_price_length()):
+                temp_list.append(self.get_long_open_price(item))
+            return temp_list
+        except:
+            self.output_scraper_response('Failed to get list of long open prices')
+
+    def get_long_closing_price_list(self):
+        try:
+            temp_list = []
+            for item in range(self.get_long_closing_price_length()):
+                temp_list.append(self.get_long_closing_price(item))
+            return temp_list
+        except:
+            self.output_scraper_response('Failed to get list of long closing prices')
 
     '''
     End of Compound Functions
