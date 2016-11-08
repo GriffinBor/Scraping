@@ -7,9 +7,13 @@ NAME_FILE_NAME = 'Name_List.txt'
 NAME_FILE_PATH = ''
 NAME_LIST = []
 
+SQL_USERNAME = "postgres"
+SQL_PASSWORD = "pickle"
+SQL_HOST = "52.34.246.30"
+
 
 JSON_FILE_OUTPUT_PATH = 'Stock JSON/'
-
+DATA_FILE_OUTPUT_PATH = 'Stock Data/'
 #Ranges = ["1d","5d","1mo","3mo","6mo","1y","2y","5y","10y","ytd","max"]
 #Intervals = ["1m", "5m", "10m"] could be more
 LONG_DATA_INTERVAL = '1m'
@@ -26,6 +30,9 @@ if not os.path.isfile(NAME_FILE_PATH):
 
 if not os.path.exists(JSON_FILE_OUTPUT_PATH):
     os.mkdir(JSON_FILE_OUTPUT_PATH)
+
+if not os.path.exists(DATA_FILE_OUTPUT_PATH):
+    os.mkdir(DATA_FILE_OUTPUT_PATH)
 
 with open(TICKER_FILE_PATH + TICKER_FILE_NAME, 'r') as f:
     for line in f:

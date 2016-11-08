@@ -5,7 +5,7 @@ import settings
 
 
 class Ticker_Scraper:
-    def __init__(self, Ticker,  get_base_data=True, get_financial_data=False, get_long_data=False):
+    def __init__(self, Ticker, get_base_data=True, get_financial_data=False, get_long_data=False):
         try:
             self.Ticker_Name = Ticker
             self.Ticker_Scraper_Output = True
@@ -83,14 +83,53 @@ class Ticker_Scraper:
             f = open(path + name, 'w')
             f.write(json.dumps(data, sort_keys=True, indent=4, separators=(',', ':')))
         except:
-            self.output_scraper_response('Failed to write data to csv file')
+            self.output_scraper_response('Failed to write data to json file')
 
     def append_json_to_file(self, path, name, data):
         try:
             f = open(path + name, 'a')
             f.write(json.dumps(data, sort_keys=True, indent=4, separators=(',', ':')))
         except:
-            self.output_scraper_response('Failed to write data to csv file')
+            self.output_scraper_response('Failed to write data to json file')
+
+    def append_long_data_to_file(self, path, name):
+        try:
+            f = open(path + name, 'a')
+            for item in range(self.get_long_timestamp_length()):
+                f.write(
+                    str(self.get_timestamp_with_offset(item)) + ', ' + str(self.get_long_closing_price(item)) + '\n')
+            f.close()
+        except:
+            self.output_scraper_response('Failed to write data to json file')
+
+    def write_financial_data(self, path, name):
+        try:
+            f = open(path + name, 'w')
+            f.write('Revenue per share, ' + str(self.get_revenue_per_share()) + '\n')
+            f.write('Revenue growth, ' + str(self.get_revenue_growth()) + '\n')
+            f.write('Return on equity, ' + str(self.get_return_on_equity()) + '\n')
+            f.write('Return on assets, ' + str(self.get_return_on_assets()) + '\n')
+            f.write('Buying recommendation, ' + str(self.get_buying_recommendation()) + '\n')
+            f.write('Earnings growth, ' + str(self.get_earnings_growth()) + '\n')
+            f.write('Debt to equity, ' + str(self.get_debt_to_equity()) + '\n')
+            f.write('Trailing eps, ' + str(self.get_trailing_eps()) + '\n')
+            f.write('Profit margin, ' + str(self.get_profit_margins()) + '\n')
+            f.write('Price to book, ' + str(self.get_price_to_book()) + '\n')
+            f.write('Quarterly earnings growth, ' + str(self.get_quarterly_earnings_growth()) + '\n')
+            f.write('Book value, ' + str(self.get_book_value()) + '\n')
+            f.write('Beta number, ' + str(self.get_beta_number()) + '\n')
+            f.write('52 week change, ' + str(self.get_52week_change()) + '\n')
+            f.write('S and P 52 week change, ' + str(self.get_sp_52week_change()) + '\n')
+            f.write('Earnings high, ' + str(self.get_earnings_high()) + '\n')
+            f.write('Earnings low, ' + str(self.get_earnings_low()) + '\n')
+            f.write('Earnings average, ' + str(self.get_earnings_average()) + '\n')
+            f.write('Revenue high, ' + str(self.get_revenue_high()) + '\n')
+            f.write('Revenue low, ' + str(self.get_revenue_low()) + '\n')
+            f.write('Revenue average, ' + str(self.get_revenue_average()) + '\n')
+            f.close()
+
+        except:
+            self.output_scraper_response('Failed to write data to json file')
 
     '''
     End file operations
@@ -123,7 +162,6 @@ class Ticker_Scraper:
         except:
             self.output_scraper_response('Failed to get long timestamp')
 
-
     def get_long_closing_price_length(self):
         try:
             return len(self.Long_Data['chart']['result'][0]['indicators']['quote'][0]['close'])
@@ -153,9 +191,6 @@ class Ticker_Scraper:
             return len(self.Long_Data['chart']['result'][0]['indicators']['quote'][0]['volume'])
         except:
             self.output_scraper_response('Failed to get long volume')
-
-
-
 
     def get_timestamp_length(self):
         try:
@@ -433,8 +468,7 @@ class Ticker_Scraper:
     def get_long_timestamp(self, index, convert_to_datetime=True):
         try:
             if convert_to_datetime:
-                return time.strftime("%m-%d-%Y %I:%M:%S %p",
-                                     time.gmtime(self.Long_Data['chart']['result'][0]['timestamp'][index]))
+                return time.strftime("%m-%d-%Y %I:%M:%S %p",time.gmtime(self.Long_Data['chart']['result'][0]['timestamp'][index]))
             elif not convert_to_datetime:
                 return self.Long_Data['chart']['result'][0]['timestamp'][0]
         except:
@@ -502,6 +536,14 @@ class Ticker_Scraper:
                 return time.strftime("%m-%d-%Y %I:%M:%S %p", time.gmtime(current + offset))
             elif not convert_to_datetime:
                 return current + offset
+        except:
+            self.output_scraper_response('Failed to get timestamp with offset')
+
+    def get_date_with_offset(self, index):
+        try:
+            offset = self.Ticker_Data['chart']['result'][0]['meta']['tradingPeriods'][0][0]['gmtoffset']
+            current = self.Ticker_Data['chart']['result'][0]['timestamp'][index]
+            return time.strftime("%m-%d-%Y", time.gmtime(current + offset))
         except:
             self.output_scraper_response('Failed to get timestamp with offset')
 

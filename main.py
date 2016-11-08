@@ -1,61 +1,44 @@
 import settings
-import tkinter
 import Scraper
-import Analyzer
-import Trader
-import Manager
 import time
-import requests
-import json
+import os
+import Connections
+import Trader
+import Analyzer
+import psycopg2
 start_time = time.time()
 
-# g = open("url list.txt", "r")
-#
-# temp_list = []
-#
-# for line in g:
-#     if '%' in line:
-#         if '\n' in line:
-#             temp_list.append(line.rstrip('\n'))
-#         else:
-#             temp_list.append(line)
-#
-# # for line in temp_list:
-# #     print(line)
-#
-# for line in temp_list:
-#     for line2 in temp_list:
-#         if line2 == line:
-#             temp_list.remove(line2)
-#
-# for line in temp_list:
-#     print(line)
-ticker_list = ['AAPL']
+def write_basic_data(scraper):
+    scraper.write_json_to_file(settings.JSON_FILE_OUTPUT_PATH + scraper.Ticker_Name + '/', str(scraper.get_date_with_offset(0)) +'.json', scraper.Ticker_Data)
+
+def write_financial_data(scraper):
+    scraper.write_financial_data(settings.DATA_FILE_OUTPUT_PATH + scraper.Ticker_Name + '/', str(scraper.get_date_with_offset(0)) + '_financial_data.txt')
+
+def write_long_data(scraper):
+    scraper.append_long_data_to_file(settings.DATA_FILE_OUTPUT_PATH + scraper.Ticker_Name + '/', str(scraper.get_date_with_offset(0)) + '_long_data.txt')
+ticker_list = ['AAPL', 'TWTR', 'NFLX']
 
 manager_accounts = {}
 ticker_services = {}
 
-for ticker in ticker_list:
+for ticker in settings.TICKER_LIST:
     ticker_services[ticker] = {'Scraper': Scraper.Ticker_Scraper(ticker,True, False, True), 'Analyzer': Analyzer.Ticker_Analzyer(ticker),
                                'Trader': Trader.Ticker_Trader(ticker)}
-
+    ticker_services[ticker] = {'Scraper': Scraper.Ticker_Scraper(ticker,True, True, True)}
 for ticker in ticker_services:
     cur_scraper = ticker_services[ticker]['Scraper']
-    cur_trader = ticker_services[ticker]['Trader']
-    cur_analyzer = ticker_services[ticker]['Analyzer']
+    if not os.path.exists(settings.JSON_FILE_OUTPUT_PATH + cur_scraper.Ticker_Name + '/'):
+        os.mkdir(settings.JSON_FILE_OUTPUT_PATH + cur_scraper.Ticker_Name + '/')
 
-    data_list = []
-    data_list = cur_scraper.get_long_closing_price_list()
-    for item in range(cur_scraper.get_long_timestamp_length()):
-        print(str(item) + ', ' + str(cur_scraper.get_long_timestamp(item)) + ', ' + str(cur_scraper.get_long_closing_price(item)))
+    if not os.path.exists(settings.DATA_FILE_OUTPUT_PATH + cur_scraper.Ticker_Name + '/'):
+        os.mkdir(settings.DATA_FILE_OUTPUT_PATH + cur_scraper.Ticker_Name + '/')
 
+    write_basic_data(cur_scraper)
+    write_financial_data(cur_scraper)
+    write_long_data(cur_scraper)
+    # cur_trader = ticker_services[ticker]['Trader']
+    # cur_analyzer = ticker_services[ticker]['Analyzer']
 
-# pizza = requests.get("https://query1.finance.yahoo.com/v10/finance/quoteSummary/AAPL?formatted=true&crumb=RnfZVQrjb%2FI&lang=en-US&region=US&modules=summaryProfile%2CfinancialData%2CrecommendationTrend%2CupgradeDowngradeHistory%2Cearnings%2CdefaultKeyStatistics%2CcalendarEvents&corsDomain=finance.yahoo.com")
-#
-# varib = pizza.json()
-#
-# f = open("newjson.json", 'w')
-# f.write(json.dumps(varib, sort_keys=True, indent=4, separators=(',', ':')))
-
+    Connections.post_timestamp_data('data', cur_scraper)
 print('\n\n\n')
 print("--- %s seconds ---" % (time.time() - start_time))
