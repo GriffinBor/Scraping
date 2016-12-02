@@ -20,8 +20,8 @@ ticker_list = ['AAPL', 'TWTR', 'NFLX', 'SRCE', 'FCCY']
 manager_accounts = {}
 ticker_services = {}
 
-for ticker in settings.TICKER_LIST:
-    Connections.post_ticker_lookup_table('data','lookup', ticker)
+# for ticker in settings.TICKER_LIST:
+#     Connections.post_ticker_lookup_table('data','lookup', ticker)
 
 for ticker in settings.TICKER_LIST:
     # ticker_services[ticker] = {'Scraper': Scraper.Ticker_Scraper(ticker,True, False, True), 'Analyzer': Analyzer.Ticker_Analzyer(ticker),'Trader': Trader.Ticker_Trader(ticker)}
@@ -34,9 +34,9 @@ for ticker in ticker_services:
     if not os.path.exists(settings.DATA_FILE_OUTPUT_PATH + cur_scraper.Ticker_Name + '/'):
         os.mkdir(settings.DATA_FILE_OUTPUT_PATH + cur_scraper.Ticker_Name + '/')
 
-    # write_basic_data(cur_scraper)
-    # write_financial_data(cur_scraper)
-    # write_long_data(cur_scraper)
+    write_basic_data(cur_scraper)
+    write_financial_data(cur_scraper)
+    write_long_data(cur_scraper)
     # Connections.post_timestamp_data('data','playground', cur_scraper)
 
 print('\n\n\n')

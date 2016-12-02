@@ -1,6 +1,5 @@
 import psycopg2
 import settings
-import Scraper
 
 def post_ticker_lookup_table(sql_db, table, ticker):
     connection = psycopg2.connect(host=settings.SQL_HOST, dbname=sql_db, user=settings.SQL_USERNAME, password=settings.SQL_PASSWORD)
